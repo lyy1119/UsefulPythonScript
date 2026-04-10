@@ -1,6 +1,18 @@
+# ------------------------ headerGen.py ------------------------
+# Author      : lycarus
+# Description : a tool helps you write responsibility and other
+#               informations in a format for your code.
+# DateTime    : 2026-04-10
+# Language    : Python
+# Email       : me@lycarus.cn
+# Compiler    : Python3.12
+# Github      : https://github.com/lyy1119/UsefulPythonScript/
+# --------------------------------------------------------------
+
 import argparse
 import datetime
 import sys
+import textwrap
 
 def generate_header():
     parser = argparse.ArgumentParser(
@@ -25,6 +37,8 @@ def generate_header():
 
     # 6. 基础信息
     parser.add_argument("--author", default="Admin")
+    parser.add_argument("-d", "--desc",
+                        default="A custom utility script/library developed for automated data processing and task management.",help="描述信息")
     parser.add_argument("--lang", default="Python")
     parser.add_argument("--email", default="admin@example.com")
     parser.add_argument("--ver", help="版本号")
@@ -58,7 +72,8 @@ def generate_header():
     info_list.extend(extra_data)
 
     # 计算最长键的长度（用于冒号对齐）
-    max_key_len = max(len(k) for k, v in info_list)
+    max_key_len = max(max(len(k) for k, v in info_list), len("Description"))
+    
     # 格式化内容行
     content_lines = [f"{k.ljust(max_key_len)} : {v}" for k, v in info_list]
     
@@ -66,6 +81,26 @@ def generate_header():
     max_content_len = max(len(line) for line in content_lines)
     # 确保边框能容纳文件名
     box_width = max(max_content_len, len(args.filename)) + 2 
+
+    # 处理 Description 的换行
+    prefix = f"{'Description'.ljust(max_key_len)} : "
+    indent = " " * len(prefix)
+    # 可供文本填充的宽度：box_width - 前缀长度
+    wrapper_width = box_width - len(prefix)
+    min_wrapper_width = 30
+    if wrapper_width < min_wrapper_width and wrapper_width < len(args.desc):
+        wrapper_width = min_wrapper_width # 防止边框太窄导致换行失败
+        box_width = wrapper_width + len(prefix)
+
+    wrapped_desc = textwrap.wrap(args.desc, width=wrapper_width)
+    # 构造 Description 的行
+    desc_lines = []
+    if wrapped_desc:
+        desc_lines.append(f"{prefix}{wrapped_desc[0]}")
+        for extra_line in wrapped_desc[1:]:
+            desc_lines.append(f"{indent}{extra_line}")
+    else:
+        desc_lines.append(f"{prefix}")
 
     # --- 构造最终行 ---
     
@@ -78,6 +113,8 @@ def generate_header():
     final_output.append(display_title.center(box_width, args.style))
     
     # 2. 中间信息
+    # 插入Description
+    content_lines = content_lines[0:1] + desc_lines + content_lines[1:]
     final_output.extend(content_lines)
     
     # 3. 底边框
