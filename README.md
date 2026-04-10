@@ -40,12 +40,16 @@ python addPdfbookmark.py book.pdf \
 生成代码文件的责任编辑信息，默认输出内容如下：  
 
 ```
-# ----------- mylib ------------
-# Author   : Admin
-# DateTime : 2026-04-10
-# Language : Python
-# Email    : admin@example.com
-# ------------------------------
+# ------------------ mylib -------------------
+# Author      : Admin
+# Description : A custom utility
+#               script/library developed for
+#               automated data processing and
+#               task management.
+# DateTime    : 2026-04-10
+# Language    : Python
+# Email       : admin@example.com
+# --------------------------------------------
 ```
 
 **特点** ：
@@ -55,7 +59,28 @@ python addPdfbookmark.py book.pdf \
 - 冒号自动对齐
 - 文本上下分割线符号自定义
 - 标题（文件名）自动居中
+- “描述”部分自动换行
 
 使用 `-h` 参数查看参数详情
+
+**一个示例**  
+
+命令：  
+```bash
+py headerGen.py -f headerGen.py --author lycarus --email me@lycarus.cn --lang Python --compiler Python3.12 -d "a tool helps you write responsibility and other informations in a format for your code." --extra 'Github' 'https://github.com/lyy1119/UsefulPythonScript/'
+```
+生成：  
+```
+# ------------------------ headerGen.py ------------------------
+# Author      : lycarus
+# Description : a tool helps you write responsibility and other
+#               informations in a format for your code.
+# DateTime    : 2026-04-10
+# Language    : Python
+# Email       : me@lycarus.cn
+# Compiler    : Python3.12
+# Github      : https://github.com/lyy1119/UsefulPythonScript/
+# --------------------------------------------------------------
+```
 
 使用方法：直接在文件相应目录下运行即可。  
